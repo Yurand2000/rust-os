@@ -3,6 +3,10 @@ name = "rustos"
 version = "0.1.0"
 edition = "2021"
 
+[dependencies]
+lazy_static = {version = "1.4.0", features = ["spin_no_std"]}
+spin = "0.9.8"
+
 [unstable]
 build-std-features = ["compiler-builtins-mem"]
 build-std = ["core", "compiler_builtins"]
