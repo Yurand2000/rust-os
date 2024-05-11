@@ -2,7 +2,7 @@ build_dir = build/x86_64-unknown-none
 iso = target/os.iso
 grub_cfg = grub_config/grub.cfg
 linker_script = scripts/linker.ld
-rust_out_file = target/x86_64-unknown-none/debug/rustos
+rust_out_file = target/x86_64-unknown-none/debug/librustos.a
 kernel = target/x86_64-unknown-none/debug/rustos.bin
 assembly_source_files := $(wildcard src/bootloader/*.s)
 assembly_object_files := $(patsubst src/bootloader/%.s, \
@@ -27,9 +27,9 @@ $(iso): $(kernel) $(grub_cfg)
 	@grub-mkrescue -o $(iso) $(build_dir)
 	@rm -r $(build_dir)
 
-$(kernel): $(assembly_object_files) $(linker_script) kernel $(rust_os)
+$(kernel): $(assembly_object_files) $(linker_script) kernel $(rust_out_file)
 	@ld -n --gc-sections -T $(linker_script) -o $(kernel) \
-		$(assembly_object_files) $(rust_os)
+		$(assembly_object_files) $(rust_out_file)
 
 kernel:
 	@cargo build

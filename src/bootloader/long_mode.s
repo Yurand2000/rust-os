@@ -1,4 +1,5 @@
 global long_mode_start
+extern kernel_start
 
 section .text
 bits 64
@@ -14,4 +15,5 @@ long_mode_start:
     ; print `OKAY` to screen
     mov rax, 0x1f591f411f4b1f4f
     mov qword [0xb8000], rax
+    call kernel_start
     hlt
