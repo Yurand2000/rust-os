@@ -1,0 +1,12 @@
+[build]
+target = "x86_64-unknown-none"
+
+[target.x86_64-unknown-none]
+rustflags = [
+    "-C", "link-arg=-Tscripts/linker.ld",
+    #"-C", "no-redzone=y",
+    "-C", "relocation-model=static"
+]
+
+[target.'cfg(target_os = "none")']
+runner = "scripts/make_image_and_run.sh"

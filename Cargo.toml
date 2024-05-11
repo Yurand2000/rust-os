@@ -1,0 +1,14 @@
+[package]
+name = "rustos"
+version = "0.1.0"
+edition = "2021"
+
+[unstable]
+build-std-features = ["compiler-builtins-mem"]
+build-std = ["core", "compiler_builtins"]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
