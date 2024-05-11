@@ -1,14 +1,11 @@
 #![no_main]
 #![no_std]
 
-use core::arch::{global_asm, asm};
-
-global_asm!(include_str!("multiboot_header.s"));
-global_asm!(include_str!("boot.s"));
+use core::arch::asm;
 
 use core::panic::PanicInfo;
 
-/*static HELLO: &[u8] = b"Hello World!";
+static HELLO: &[u8] = b"Hello World!";
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
@@ -23,7 +20,7 @@ pub extern "C" fn _start() -> ! {
 
     unsafe { asm!("hlt"); }
     panic!();
-}*/
+}
 
 #[panic_handler]
 fn panic(_panic: &PanicInfo<'_>) -> ! {

@@ -9,4 +9,4 @@ rustflags = [
 ]
 
 [target.'cfg(target_os = "none")']
-runner = "scripts/make_image_and_run.sh"
+runner = "make run"

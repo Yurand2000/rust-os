@@ -4,7 +4,7 @@ Yet to unfold...
 
 ### Instructions
 Install dependencies
-- `$` `sudo apt install grub2 xorriso qemu-system`
+- `$` `sudo apt install make nasm grub2 xorriso qemu-system`
 
 Our compile target is a amd64 architecture, but since we are writing the OS from scratch, there is no underlying OS, system calls and such. We need to install a specific compile target, OS agnostic.
 - `$` `rustup target add x86_64-unknown-none`

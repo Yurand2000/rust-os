@@ -1,27 +1,28 @@
-.global start
+global start
 
-.section .text
+section .text
+bits 32
 start:
     mov esp, stack_top
     call check_multiboot
     call check_cpuid
     call check_long_mode
 
-    // Print OK to the screen
-    mov dword ptr [0xb8000], 0x2f4b2f4f
+    ; Print OK to the screen
+    mov dword [0xb8000], 0x2f4b2f4f
     hlt
 
-// Prints `ERR: ` and the given error code to screen and hangs.
-// parameter: error code (in ascii) in al
+; Prints `ERR: ` and the given error code to screen and hangs.
+; parameter: error code (in ascii) in al
 error:
-    mov dword ptr [0xb8000], 0x4f524f45
-    mov dword ptr [0xb8004], 0x4f3a4f52
-    mov dword ptr [0xb8008], 0x4f204f20
-    mov byte  ptr [0xb800a], al
+    mov dword [0xb8000], 0x4f524f45
+    mov dword [0xb8004], 0x4f3a4f52
+    mov dword [0xb8008], 0x4f204f20
+    mov byte  [0xb800a], al
     hlt
 
 check_multiboot:
-    // The bootloader loads a specific value in eax before executing the kernel
+    ; The bootloader loads a specific value in eax before executing the kernel
     cmp eax, 0x36d76289
     jne .no_multiboot
     ret
@@ -29,7 +30,7 @@ check_multiboot:
     mov al, "0"
     jmp error
 
-// https://wiki.osdev.org/Setting_Up_Long_Mode#Detection_of_CPUID
+; https://wiki.osdev.org/Setting_Up_Long_Mode#Detection_of_CPUID
 check_cpuid:
     ; Check if CPUID is supported by attempting to flip the ID bit (bit 21)
     ; in the FLAGS register. If we can flip it, CPUID is available.
@@ -66,7 +67,7 @@ check_cpuid:
     mov al, "1"
     jmp error
 
-// https://wiki.osdev.org/Setting_Up_Long_Mode#x86_or_x86-64
+; https://wiki.osdev.org/Setting_Up_Long_Mode#x86_or_x86-64
 check_long_mode:
     ; test if extended processor info in available
     mov eax, 0x80000000    ; implicit argument for cpuid
@@ -84,7 +85,7 @@ check_long_mode:
     mov al, "2"
     jmp error
 
-.section .bss
+section .bss
 stack_bottom:
-    .space 64
+    resb 64
 stack_top:
