@@ -1,17 +1,24 @@
 global start
+extern long_mode_start
 
 section .text
 bits 32
 start:
     mov esp, stack_top
+    call clean_vga_buffer
+
     call check_multiboot
     call check_cpuid
     call check_long_mode
     call set_up_page_tables
     call enable_paging
 
+    ; load the 64-bit GDT
+    lgdt [gdt64.pointer]
+
+    jmp gdt64.code:long_mode_start
+
     ; Print OK to the screen
-    call clean_vga_buffer
     mov dword [0xb8000], 0x1f4b1f4f
     hlt
 
@@ -139,12 +146,13 @@ enable_paging:
     ret
 
 clean_vga_buffer:
+    push ebx
+    push ecx
     mov ecx, 0
 .cl_loop:
     mov ebx, 0xb8000
-    mov edx, ecx
-    shl edx, 1
-    add ebx, edx
+    add ebx, ecx
+    add ebx, ecx
     mov byte [ebx], 0x00
     mov byte [ebx+1], 0x1f
     cmp ecx, 80*25-1
@@ -152,8 +160,18 @@ clean_vga_buffer:
     inc ecx
     jmp .cl_loop
 .cl_loop_exit:
+    pop ecx
+    pop ebx
     ret
 
+section .rodata
+gdt64:
+    dq 0 ; zero entry
+.code: equ $ - gdt64 ; new
+    dq (1<<43) | (1<<44) | (1<<47) | (1<<53) ; code segment
+.pointer:
+    dw $ - gdt64 - 1
+    dq gdt64
 section .bss
 align 4096
 p4_table:
